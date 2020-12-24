@@ -54,9 +54,8 @@ void Spline3Interpolator::SetCurvatureLine()
         den2 = x[uk] - x[uj];
 
         v[i] = 6 * (num1 / den1 - num2 / den2);
-        cout << "num1 : " << num1 << "num2 : " << num2 << "den1 : " << den1 << "den2 : " << den2 << endl;
-        cout << "valor vi: " << v[i] << endl;
-
+        //cout << "num1 : " << num1 << "num2 : " << num2 << "den1 : " << den1 << "den2 : " << den2 << endl;
+        //cout << "valor vi: " << v[i] << endl;
         dk = dk + 1;
         dj = dj + 1;
         uk = uk + 1;
@@ -65,8 +64,7 @@ void Spline3Interpolator::SetCurvatureLine()
         num2 = 0.;
         den1 = 0.;
         den2 = 0.;
-
-        cout << "valor i: " << i << endl;
+        //cout << "valor i: " << i << endl;
     }
 
     Vec vi(N - 2, v);
@@ -77,13 +75,13 @@ void Spline3Interpolator::SetCurvatureLine()
 
     Vec res = FCmatrixAlgorithms::GaussSolverBanded(R, vi, 1);
 
-    R.Print();
-    cout << res << endl;
+    //R.Print();
+    //cout << res << endl;
 
     for (int i = 0; i < N - 2; ++i)
     {
         K[i] = res[i];
-        cout << "valor k: " << K[i] << endl;
+        //cout << "valor k: " << K[i] << endl;
     }
 
     delete[] v;
@@ -109,21 +107,18 @@ double Spline3Interpolator::Interpolate(double x0)
     if (i == 0 || i == N) // out of range
         return 0.;
 
-    cout << "valor i: " << i << endl; // i : upper bound
-    // erro must below -->>>>>>>>>
+    //cout << "valor i: " << i << endl; // i : upper bound
     double a = 1. / 6.;
     double res1, res2;
     double xx1 = x0 - x[i];
     double xx2 = x0 - x[i - 1];
     double xix = x[i - 1] - x[i];
-    cout << "xx1: " << xx1 << "xx2: " << xx2 << "xix: " << xix << endl;
 
     double xx13 = xx1 * xx1 * xx1;
     double xx23 = xx2 * xx2 * xx2;
     res1 = a * K[i - 1] * (xx13 / xix - xx1 * xix) - a * K[i] * (xx23 / xix - xx2 * xix);
     res2 = (y[i - 1] * xx1 - y[i] * xx2) / xix;
 
-    cout << "res " << res1 << " , ," << res2 << endl;
 
     double Res = res1 + res2;
     return Res;

@@ -7,7 +7,6 @@
 
 class LagrangeInterpolator : public DataPoints
 {
-
 public:
     LagrangeInterpolator(int N = 0, double *x = nullptr, double *y = nullptr); // N, x, y
     ~LagrangeInterpolator();

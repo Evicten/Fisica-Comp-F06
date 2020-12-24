@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <cstdio>
 #include "TROOT.h"
+#include <iostream>
 
 using namespace std;
 
@@ -24,19 +25,20 @@ FCmatrix::FCmatrix(double **a, int m, int n, string s) : classname(s)
 FCmatrix::~FCmatrix()
 {
   M.clear();
+  cout << __PRETTY_FUNCTION__ << endl;
 }
 
 FCmatrix::FCmatrix(double *a, int m, int n, string s) : classname(s)
 {
   if (!a)
-    // throw std::invalid_argument(Form("[%s] null pointer...!\n", __PRETTY_FUNCTION__));
-    for (int i = 0; i < m; ++i)
-    {
-      M.emplace_back(n, &a[i * n]);
-    }
+    throw std::invalid_argument(Form("[%s] null pointer...!\n", __PRETTY_FUNCTION__));
+  for (int i = 0; i < m; ++i)
+  {
+    M.emplace_back(n, &a[i * n]);
+  }
 }
 
-FCmatrix::FCmatrix(vector<Vec> &v, string s) : classname(s)
+FCmatrix::FCmatrix(const vector<Vec> &v, string s) : classname(s)
 {
   for (int i = 0; i < v.size(); ++i)
   {
@@ -44,9 +46,10 @@ FCmatrix::FCmatrix(vector<Vec> &v, string s) : classname(s)
   }
 }
 
-FCmatrix::FCmatrix(FCmatrix &matrix, string s) : classname(s)
+FCmatrix::FCmatrix(const FCmatrix &matrix, string s) : classname(s)
 {
-  for (int i = 0; i < matrix.GetRowN(); ++i)
+  int m = matrix.GetRowN();
+  for (int i = 0; i < m; ++i)
   {
     M.emplace_back(matrix.M[i]);
   }
@@ -54,19 +57,19 @@ FCmatrix::FCmatrix(FCmatrix &matrix, string s) : classname(s)
 
 //methods
 
-int FCmatrix::GetRowN()
+int FCmatrix::GetRowN() const
 {
   return M.size();
 }
 
-int FCmatrix::GetColN()
+int FCmatrix::GetColN() const
 {
   return M[0].size();
 }
 
 // friend methods
 
-ostream &operator<<(ostream &s, FCmatrix &matrix)
+ostream &operator<<(ostream &s, const FCmatrix &matrix)
 {
   s << "matrix: [\n";
   for (int i = 0; i < matrix.GetRowN(); ++i)

@@ -4,16 +4,16 @@
 
 using namespace std;
 
-EqSolver::EqSolver(){
+EqSolver::EqSolver()
+{
     M = new FCmatrixFull();
 }
 
-EqSolver::EqSolver(FCmatrix& A, Vec& v){
+EqSolver::EqSolver(const FCmatrixFull &A, const Vec &v)
+{
     M = new FCmatrixFull(A);
-    b = v; 
+    b = v;
 }
-
-
 
 Vec EqSolver::GaussEliminationSolver(int flag)
 {
@@ -25,7 +25,7 @@ Vec EqSolver::GaussEliminationSolver(int flag)
 
     double *x = new double[m + 1];
 
-    x[m] = b[m]/M[0][m][m];
+    x[m] = b[m] / M[0][m][m];
 
     for (int k = m - 1; k >= 0; k--)
     {
@@ -37,6 +37,7 @@ Vec EqSolver::GaussEliminationSolver(int flag)
     }
 
     Vec res(m + 1, x);
+    delete[] x;
     return res;
 }
 
@@ -71,59 +72,63 @@ Vec EqSolver::LUDecompositionSolver(int flag)
         x[k] = (y[k] - sum) / M[0][k][k];
     }
 
-
     Vec res(m, x);
     return res;
 }
 
 void EqSolver::Print()
 {
-    for(int i = 0; i < M[0].GetRowN(); ++i){
-        for(int j = 0; j < M[0].GetColN(); ++j)
-        cout << M[0][i][j] << " ";
+    for (int i = 0; i < M[0].GetRowN(); ++i)
+    {
+        for (int j = 0; j < M[0].GetColN(); ++j)
+            cout << M[0][i][j] << " ";
         cout << endl;
     }
 }
 
-void EqSolver::SetConstants(Vec& a){ //condições blabla
+void EqSolver::SetConstants(const Vec &a)
+{ //condições blabla
     Vec b = a;
 }
 
-void EqSolver::SetMatrix(FCmatrix& mat){ //condições blabla
+void EqSolver::SetMatrix(const FCmatrixFull &mat)
+{ //condições blabla
     int m = mat.GetRowN();
     vector<Vec> Res;
-    for(int i = 0; i < m; ++i)
-    Res.push_back(mat[i]);
+    for (int i = 0; i < m; ++i)
+        Res.push_back(mat[i]);
 
     M[0].Setvector(Res);
-
 }
 
-Vec EqSolver::JacobiIter(){
-   
+Vec EqSolver::JacobiIter()
+{
+
     int m = M[0].GetRowN();
     Vec x(m);
     Vec x_aux(m);
     int it = 0;
     double eps = 1.E-4;
     bool bol = false;
-    while(!bol && (it++ < 1000)){
+    while (!bol && (it++ < 1000))
+    {
         x_aux = x;
-        for(int i = 0; i < m; i++){
+        for (int i = 0; i < m; i++)
+        {
             x[i] = 0.;
-            for(int j = 0; j < m; j++){
-                if(i != j)
-                x[i] = x[i] - M[0][i][j]*x_aux[j];
+            for (int j = 0; j < m; j++)
+            {
+                if (i != j)
+                    x[i] = x[i] - M[0][i][j] * x_aux[j];
             }
             x[i] = x[i] + b[i];
-            x[i] = x[i]/M[0][i][i];
+            x[i] = x[i] / M[0][i][i];
 
-            if(fabs(x[i]-x_aux[i]) < eps)
-            bol = true;
+            if (fabs(x[i] - x_aux[i]) < eps)
+                bol = true;
             else
-            bol = false;
+                bol = false;
         }
     }
     return x;
 }
-

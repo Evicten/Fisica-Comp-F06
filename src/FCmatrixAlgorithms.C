@@ -4,7 +4,7 @@
 
 using namespace std;
 
-void FCmatrixAlgorithms::GaussElimination(FCmatrix &A, Vec &v, int flag) //hipotese coluna de zeros não incluida
+void FCmatrixAlgorithms::GaussElimination(FCmatrixFull &A, Vec &v, int flag) //hipotese coluna de zeros não incluida
 {
 
     int m = A.GetRowN(); //linhas
@@ -23,7 +23,7 @@ void FCmatrixAlgorithms::GaussElimination(FCmatrix &A, Vec &v, int flag) //hipot
         for (int i = 0; i < n; ++i)
         {
             s[i] = A[i][A.GetRowMax(i)];
-            int a = A.GetRowMax(i);
+            //int a = A.GetRowMax(i);
             //cout << "col max " << a << " ";
             //cout << "valor si: " << s[i] << " ";
         }
@@ -41,13 +41,16 @@ void FCmatrixAlgorithms::GaussElimination(FCmatrix &A, Vec &v, int flag) //hipot
             int maxpivot;
 
             for (int p = 0; p < i; ++p)
-                rscale[p] = 0.;
+            {
+                int ix = A.GetRowIdx(p);
+                rscale[ix] = 0.;
+            }
             for (int p = i; p < m; ++p)
             {
                 int ix = A.GetRowIdx(p);
-                cout << " pivot: " << fabs(A[ix][i]) << "valor s[p]" << s[ix] << endl;
-                rscale[p] = fabs(A[ix][i]) / s[ix];
-                cout << "___" << rscale[p] << "___________ : ";
+                //cout << " pivot: " << fabs(A[ix][i]) << "valor s[p]" << s[ix] << endl;
+                rscale[ix] = fabs(A[ix][i]) / s[ix];
+                cout << "___" << rscale[ix] << "___________ : ";
             }
 
             maxpivot_ = max_element(rscale.begin(), rscale.end());
@@ -56,13 +59,24 @@ void FCmatrixAlgorithms::GaussElimination(FCmatrix &A, Vec &v, int flag) //hipot
             {
                 maxpivot = distance(rscale.begin(), maxpivot_); //posição do pivot maior
                 //A.IdxPrint();
+                //cout << "maxpivot: " << maxpivot << endl;
                 double C;
                 int Ic = A.GetRowIdx(i);
+                //cout << "IC: " << Ic << "i : " << i << endl;
                 A.SetRowIdx(i, maxpivot);
-                A.SetRowIdx(maxpivot, Ic);
+                int mi;
+                for (mi = 0; mi < m; mi++)
+                {
+                    if (A.GetRowIdx(maxpivot) == mi)
+                        break;
+                }
+                //cout << "mI: " << mi << endl;
+                A.SetRowIdx(mi, Ic);
                 C = v[i];
                 v[i] = v[maxpivot];
-                v[maxpivot] = C;
+                v[mi] = C;
+                cout << "rwo: "
+                     << endl;
                 //A.IdxPrint();
                 //A.Print();
             }
@@ -75,6 +89,7 @@ void FCmatrixAlgorithms::GaussElimination(FCmatrix &A, Vec &v, int flag) //hipot
             {
                 ;
             }
+
             Swap(A, p, i);
             //A.Print();
         }
@@ -100,26 +115,22 @@ void FCmatrixAlgorithms::GaussElimination(FCmatrix &A, Vec &v, int flag) //hipot
                 A[hR][j] = A[hR][j] - lam * A[iR][j];
                 v[hR] = v[hR] - lam * v[iR];
                 //cout << "jhti" << endl;
-                A.Print();
             }
         }
     }
 }
 
-void FCmatrixAlgorithms::Swap(FCmatrix &mat, int a, int b)
+void FCmatrixAlgorithms::Swap(FCmatrixFull &mat, int a, int b)
 { //troca o a com o b
     Vec C;
     C = mat[b];
     cout << C << endl;
     mat[b] = mat[a];
     mat[a] = C;
-
     //mat.SetRowIdx(a, b);
-
-    //
 }
 
-void FCmatrixAlgorithms::LUDecomposition(FCmatrix &A, int flag)
+void FCmatrixAlgorithms::LUDecomposition(FCmatrixFull &A, int flag)
 {
 
     int m = A.GetRowN(); //linhas
@@ -132,7 +143,7 @@ void FCmatrixAlgorithms::LUDecomposition(FCmatrix &A, int flag)
         for (int i = 0; i < n; ++i)
         {
             s[i] = A[i][A.GetRowMax(i)];
-            int a = A.GetRowMax(i);
+            //int a = A.GetRowMax(i);
             //cout << "col max " << a << " ";
             //cout << "valor si: " << s[i] << " ";
         }
@@ -150,12 +161,15 @@ void FCmatrixAlgorithms::LUDecomposition(FCmatrix &A, int flag)
             int maxpivot;
 
             for (int p = 0; p < i; ++p)
-                rscale[p] = 0.;
+            {
+                int ix = A.GetRowIdx(p);
+                rscale[ix] = 0.;
+            }
             for (int p = i; p < m; ++p)
             {
                 int ix = A.GetRowIdx(p);
                 //cout << " pivot: " << fabs(A[ix][i]) << "valor s[p]" << s[ix] << endl;
-                rscale[p] = fabs(A[ix][i]) / s[ix];
+                rscale[ix] = fabs(A[ix][i]) / s[ix];
                 //cout << "___" << rscale[p] << "___________ : ";
             }
 
@@ -166,8 +180,14 @@ void FCmatrixAlgorithms::LUDecomposition(FCmatrix &A, int flag)
                 maxpivot = distance(rscale.begin(), maxpivot_); //posição do pivot maior
                 //A.IdxPrint();
                 int Ic = A.GetRowIdx(i);
+                int mi;
+                for (mi = 0; mi < m; mi++)
+                {
+                    if (A.GetRowIdx(maxpivot) == mi)
+                        break;
+                }
                 A.SetRowIdx(i, maxpivot);
-                A.SetRowIdx(maxpivot, Ic);
+                A.SetRowIdx(mi, Ic);
                 //A.IdxPrint();
                 //A.Print();
             }
@@ -203,16 +223,15 @@ void FCmatrixAlgorithms::LUDecomposition(FCmatrix &A, int flag)
                 //A.Print();
             }
             A[hR][i] = lam;
-            cout << endl;
+            //cout << endl;
         }
     }
 }
 
-Vec FCmatrixAlgorithms::GaussSolverBanded(FCmatrix &A, Vec &v, int flag)
+Vec FCmatrixAlgorithms::GaussSolverBanded(FCmatrixBanded &A, Vec &v, int flag) //flag faz logo fase de substituição do sistema Ax = b
 {
 
     int d = A.GetRowN(); //linhas
-    cout << "avlor ded d linhas : " << d << endl;
     int l = v.size();
     //cout << "m " << m << " n " << n << " l " << l << endl;
     if (l != d)
@@ -223,20 +242,6 @@ Vec FCmatrixAlgorithms::GaussSolverBanded(FCmatrix &A, Vec &v, int flag)
 
     for (int i = 1; i < d; ++i) //linha pivot 1
     {
-
-        /*  if (A[i][i] == 0.)
-        {
-            int p;
-            for (p = i; A[p][i] == 0; ++p)
-            {
-                ;
-            }
-            Swap(A, p, i);
-            A.Print();
-        }*/
-        //cout << "valor h: " << h << "valor hr: " << hR<< endl;
-        //cout << "Ahr" << A[hR][i] << "air" << A[iR][i] << endl;
-
         if (A[0][i] == 0.)
             continue;
 
@@ -247,17 +252,9 @@ Vec FCmatrixAlgorithms::GaussSolverBanded(FCmatrix &A, Vec &v, int flag)
         A[1][i] = A[1][i] - lam * A[2][i - 1];
         A[0][i - 1] = 0.;
         if (i > 0)
-        {
-            cout << " ----------------" << endl;
-            cout << "valor i: "<< i << endl;
-            cout << "vi before: " << v[i] << "vi-1: " << v[i-1] << endl;
             v[i] = v[i] - lam * v[i - 1];
-            cout << "lam: " << lam << endl;
-            cout << "v[i]afte: " << v[i] << endl;
-        }
     }
 
-    //FCmatrixAlgorithms::GaussEliminationBanded(M[0], b);
     if (flag == 1)
     {
         double *x = new double[d + 1];
@@ -281,28 +278,13 @@ Vec FCmatrixAlgorithms::GaussSolverBanded(FCmatrix &A, Vec &v, int flag)
     return D;
 }
 
-void FCmatrixAlgorithms::LuDecompositionBanded(FCmatrix &A)
+void FCmatrixAlgorithms::LuDecompositionBanded(FCmatrixBanded &A)
 {
 
     int d = A.GetRowN(); //linhas
 
     for (int i = 0; i < d; ++i) //linha pivot 1
     {
-
-        /*  if (A[i][i] == 0.)
-        {
-            int p;
-            for (p = i; A[p][i] == 0; ++p)
-            {
-                ;
-            }
-            Swap(A, p, i);
-            A.Print();
-            }
-        }*/
-        //cout << "valor h: " << h << "valor hr: " << hR<< endl;
-        //cout << "Ahr" << A[hR][i] << "air" << A[iR][i] << endl;
-
         if (A[0][i] == 0.)
             continue;
 

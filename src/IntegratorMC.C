@@ -12,9 +12,12 @@ IntegratorMC::~IntegratorMC()
         delete f2D;
 }
 
-void IntegratorMC::SetIntegrandFunction(TF1 *func1)
+void IntegratorMC::SetIntegrandFunction(const TF1 *func1)
 {
-    f = func1;
+    TF1 faux(*func1);
+    f = &faux;
+
+    delete func1;
 }
 
 void IntegratorMC::GetRange2D(double &xmin, double &xmax, double &ymin, double &ymax)
@@ -50,7 +53,7 @@ void IntegratorMC::IntegralMC(int N, double &result, double &error)
     error = inter * sqrt(error1) / sqrt((double)N);
 }
 
-void IntegratorMC::IntegralMCIS(int &N, double &result, double &error, TF1 *pdf, TF1 *xy)
+void IntegratorMC::IntegralMCIS(int &N, double &result, double &error, const TF1 *pdf, const TF1 *xy)
 { //in a pdf  I have x(y), y generates a random double between 0 and 1
     double xmin, xmax;
     GetRange(xmin, xmax);
@@ -68,11 +71,12 @@ void IntegratorMC::IntegralMCIS(int &N, double &result, double &error, TF1 *pdf,
     double error_t = 1.;
 
     gRandom->SetSeed(0);
+    TF1 faux(*pdf);
     
     while((bN && count < N) || (!bN && error_t < error)){
 
         if(count == 0){
-            cout << "valor integral: "<< pdf->Integral(xmin, xmax) << endl;
+            cout << "valor integral: "<< faux.Integral(xmin, xmax) << endl;
         }
 
         double y = gRandom->Uniform();
@@ -153,13 +157,15 @@ void IntegratorMC::IntegralMCAR(int N, double &result, double &error)
     error = subRes * sqrt(NR * (1. - NR / NN));
 }
 
-void IntegratorMC::IntegralMCAR(int N, double &result, double &error, TF1 *pdfq, TF1 *qr, TF1 *xy)
+void IntegratorMC::IntegralMCAR(int N, double &result, double &error, const TF1 *pdfq, const TF1 *qr, const TF1 *xy)
 { //uses a pdf given by the user
     double xmin, xmax;
     GetRange(xmin, xmax);
 
+    TF1 faux(*qr);
+
     double inter = xmax - xmin;
-    double Intq = qr->Integral(xmin, xmax);
+    double Intq = faux.Integral(xmin, xmax);
     double y;
     double xR, fR;
     int n = 0; //favorable events
@@ -191,10 +197,10 @@ void IntegratorMC::IntegralMCBF(int N, double &result)
 {
     double xmin, xmax, ymin, ymax;
     GetRange2D(xmin, xmax, ymin, ymax);
-    cout << "xmin: " << xmin << " xmax: " << xmax << " ymin: " << ymin << " ymax: " << ymax << endl;
+    //cout << "xmin: " << xmin << " xmax: " << xmax << " ymin: " << ymin << " ymax: " << ymax << endl;
     double interx = xmax - xmin;
     double intery = ymax - ymin;
-    cout << "interx: " << interx << " intery: " << intery << endl;
+    //cout << "interx: " << interx << " intery: " << intery << endl;
     double xr1, xr2;
     double sum = 0.;
     double fi;

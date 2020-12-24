@@ -15,15 +15,14 @@
 
 using namespace std;
 
-// constructors
-
+// constructors -------------------
 Vec::Vec(int i, double x) : N(i)
 {
 #ifdef DEBUG
   printf("[%s]\n", __PRETTY_FUNCTION__);
 #endif
   if (N < 0)
-  throw invalid_argument(Form("[%s] received negative number of elements...!\n", __PRETTY_FUNCTION__));
+    throw invalid_argument(Form("[%s] received negative number of elements...!\n", __PRETTY_FUNCTION__));
   entries = new double[N];
   fill_n(entries, N, x);
 }
@@ -35,7 +34,7 @@ Vec::Vec(int i, const double *x) : Vec(i)
 #endif
   if (x)
     copy(x, x + i, entries);
-    else
+  else
     throw invalid_argument(Form("[%s] null pointer to array...!\n", __PRETTY_FUNCTION__));
 }
 
@@ -45,7 +44,9 @@ Vec::Vec(const Vec &v) : Vec(v.N, v.entries)
   printf("[%s]\n", __PRETTY_FUNCTION__);
 #endif
 }
-//destructor
+//-----------------
+
+//destructor--------------
 Vec::~Vec()
 {
 #ifdef DEBUG
@@ -53,15 +54,26 @@ Vec::~Vec()
 #endif
   delete[] entries;
 }
+//_------------------
 
-// operators
+// operators--------------------------------------
 double &Vec::operator[](int i)
 {
 #ifdef DEBUG
   printf("[%s]\n", __PRETTY_FUNCTION__);
 #endif
   if (i >= N)
-  throw invalid_argument(Form("[%s] index out of bounds...(i=%d N=%d)!\n", __PRETTY_FUNCTION__, i, N));
+    throw invalid_argument(Form("[%s] index out of bounds...(i=%d N=%d)!\n", __PRETTY_FUNCTION__, i, N));
+  return entries[i];
+}
+
+double Vec::operator[](int i) const
+{
+#ifdef DEBUG
+  printf("[%s]\n", __PRETTY_FUNCTION__);
+#endif
+  if (i >= N)
+    throw invalid_argument(Form("[%s] index out of bounds...(i=%d N=%d)!\n", __PRETTY_FUNCTION__, i, N));
   return entries[i];
 }
 
@@ -89,7 +101,7 @@ Vec &Vec::operator+=(Vec &v)
 #endif
   if (v.N != N)
   {
-   throw std::invalid_argument(Form("[%s] objects with different size...(N=%d v.N=%d)!\n", __PRETTY_FUNCTION__, N, v.N));
+    throw std::invalid_argument(Form("[%s] objects with different size...(N=%d v.N=%d)!\n", __PRETTY_FUNCTION__, N, v.N));
   }
   for (int i = 0; i < N; ++i)
   {
@@ -113,8 +125,45 @@ Vec Vec::operator*(double x) const
   return Vec(N, a);
 }
 
-///////////////////// friend methods
+double Vec::dot(Vec &v)
+{
+  if (v.N != N)
+    exit(1);
 
+  return inner_product(entries, entries + N, v.entries, 0);
+}
+
+void Vec::swap(int i, int j)
+{
+  if (max(i, j) >= N)
+    exit(1);
+
+  if (i != j)
+    swap(entries[i], entries[j]);
+}
+
+double Vec::sumAbs()
+{
+  return accumulate(entries, entries + N, 0, [](double accum, double x) { return accum + fabs(x); });
+}
+
+//definir um novo vetor--------------
+void Vec::SetEntries(int n, double *a)
+{
+  delete[] entries;
+  N = n;
+  cout << "valor de N: " << N << endl;
+  entries = new double[N];
+  entries = a;
+}
+
+int Vec::size() const
+{
+  return N;
+}
+//----------------------
+
+// friend method ------------------
 std::ostream &operator<<(std::ostream &s, const Vec &v)
 {
   s << "[";
@@ -127,36 +176,4 @@ std::ostream &operator<<(std::ostream &s, const Vec &v)
   s << "]";
   return s;
 }
-
-void Vec::SetEntries(int n, double *a)
-{
-  delete[] entries;
-  N = n;
-  cout << "valor de N: " << N << endl;
-  entries = new double[N];
-  entries = a;
-}
-
-int Vec::size(){
-  return N;
-}
-
-double Vec::dot(Vec& v){
-  if(v.N != N)
-  exit(1);
-
-  return inner_product(entries, entries+N, v.entries, 0);
-}
-
-void Vec::swap(int i, int j){
-  if(max(i, j) >= N)
-  exit(1);
-
-  if(i != j)
-  swap(entries[i], entries[j]);
-}
-
-double Vec::sumAbs(){
-  return accumulate(entries, entries+N, 0, [](double accum, double x){return accum+fabs(x);});
-}
-
+//-------------------------

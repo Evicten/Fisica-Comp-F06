@@ -9,11 +9,11 @@ class EqSolver{
     public:
     EqSolver();
 
-    EqSolver(FCmatrix&, Vec&);
+    EqSolver(const FCmatrixFull&, const Vec&);
 
 
-    void SetConstants(Vec&);
-    void SetMatrix(FCmatrix&);
+    void SetConstants(const Vec&);
+    void SetMatrix(const FCmatrixFull&);
 
     Vec GaussEliminationSolver(int); //1 com pivotagem, 0 sem pivot.
     Vec LUDecompositionSolver(int); //idem
@@ -21,7 +21,7 @@ class EqSolver{
     void Print(); //fiz para teste, mas pode ficar não sei
 
     private:
-    FCmatrix* M;
+    FCmatrixFull* M; //só para FCmatrixFull
     Vec b;
 
 };

@@ -3,12 +3,12 @@
 
 #include "TF1.h"
 
-class Func1D {
+class Func1D
+{
+public:
+    Func1D(const TF1 *fp = nullptr);
 
-    public:
-    Func1D(const TF1* fp = nullptr);
-        
-    Func1D(const TF1&);
+    Func1D(const TF1 &);
     virtual ~Func1D();
 
     //drawing
@@ -18,12 +18,11 @@ class Func1D {
     double Eval(double) const;
 
     //GetRange
-    void GetRange(double&, double&);
+    void GetRange(double &, double &);
 
-    protected:
-    TF1* f;
+protected:
+    TF1 *f;
     void Settings();
-
 };
 
 #endif

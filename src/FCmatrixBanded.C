@@ -7,11 +7,11 @@ using namespace std;
 
 FCmatrixBanded::FCmatrixBanded() : FCmatrix() { ; }
 
-FCmatrixBanded::FCmatrixBanded(double **mat, int d) : FCmatrix(mat, 3, d) {}
+FCmatrixBanded::FCmatrixBanded(double **mat, int d) : FCmatrix(mat, 3, d) { ; }
 
-FCmatrixBanded::FCmatrixBanded(vector<Vec> &v) : FCmatrix(v) { ; }
+FCmatrixBanded::FCmatrixBanded(const vector<Vec> &v) : FCmatrix(v) { ; }
 
-FCmatrixBanded::FCmatrixBanded(FCmatrix &v) : FCmatrix(v) {cout << "FCmatrix Banded" << endl;}
+FCmatrixBanded::FCmatrixBanded(const FCmatrix &v) : FCmatrix(v) { cout << __PRETTY_FUNCTION__ << endl; }
 
 void FCmatrixBanded::Print()
 { //a - linha 0  below diag| b - linha 1 diagonal| c - linha 2 up diag
@@ -39,24 +39,13 @@ void FCmatrixBanded::Print()
     }
 }
 
+//operators--------------------------------------------
 Vec &FCmatrixBanded::operator[](int i) //vai buscar od Vecs...
 {
-
     return M[i];
 }
-//methods
 
-int FCmatrixBanded::GetRowN()
-{
-    return M[1].size();
-}
-
-int FCmatrixBanded::GetColN()
-{ //redundante mas prontos
-    return M[1].size();
-}
-
-void FCmatrixBanded::operator=(FCmatrix &mat)
+void FCmatrixBanded::operator=(FCmatrixBanded &mat)
 {
 
     int d1;
@@ -69,7 +58,7 @@ void FCmatrixBanded::operator=(FCmatrix &mat)
     };
 }
 
-FCmatrixBanded FCmatrixBanded::operator+(FCmatrix &mat)
+FCmatrixBanded FCmatrixBanded::operator+(FCmatrixBanded &mat)
 {
 
     int d1, d2;
@@ -100,7 +89,7 @@ FCmatrixBanded FCmatrixBanded::operator+(FCmatrix &mat)
     return Res;
 }
 
-FCmatrixBanded FCmatrixBanded::operator-(FCmatrix &mat)
+FCmatrixBanded FCmatrixBanded::operator-(FCmatrixBanded &mat)
 {
 
     int d1, d2;
@@ -157,7 +146,7 @@ FCmatrixBanded FCmatrixBanded::operator*(double lambda)
     return Res;
 }
 
-FCmatrixBanded FCmatrixBanded::operator*(FCmatrix &mat)
+FCmatrixBanded FCmatrixBanded::operator*(FCmatrixBanded &mat)
 { //M*mat&
     // think about it, its not easy at all!! é uma mess e sai da matrix tridiagonal, vou ignorar agora...
     int d1, d2;
@@ -197,7 +186,7 @@ FCmatrixBanded FCmatrixBanded::operator*(FCmatrix &mat)
     return Res;
 }
 
-Vec FCmatrixBanded::operator*(Vec &v)
+Vec FCmatrixBanded::operator*(const Vec &v)
 {
     int l = v.size();
     int d;
@@ -225,99 +214,7 @@ Vec FCmatrixBanded::operator*(Vec &v)
         Res[i] = sum;
         sum = 0.;
     }
-
-    Vec R(Res);
-    return R;
-}
-
-Vec FCmatrixBanded::GetRow(int j) //useless I think
-{
-    /* int n = GetColN();
-    double *v = new double[n];
-    for (int i = 0; i < n; ++i)
-        v[i] = M[j][i];
-
-    Vec A(n, v);
-    return A;
-
-    delete[] v;*/
-
-    Vec A;
-
-    return A;
-}
-
-int FCmatrixBanded::GetRowMax(int j) //useless ig
-{
-    /*int n = GetColN();
-    double *v = new double[n];
-    vector<double> h(n);
-    for (int i = 0; i < n; ++i)
-    {
-        h[i] = M[j][i];
-        cout << "valor h[i] " << h[i] << endl;
-    }
-
-    vector<double>::iterator maxi;
-    maxi = max_element(h.begin(), h.end());
-
-    return distance(h.begin(), maxi);*/
-    return 0;
-}
-
-int FCmatrixBanded::GetColMax(int j)
-{ //j coluna a começar em 0
-    /* int n = GetColN();
-    int m = GetRowN();
-     condição j maior ou igual a 1
-    if (j > n - 1)
-    {
-        cout << "erro escolha j menor" << endl;
-        exit(1);
-    }
-    vector<double> line(m);
-    vector<double>::iterator maxi;
-    for (int i = 0; i < m; ++i)
-    {
-        line[i] = M[i][j];
-        cout << "valor. " << line[i] << "  " << endl;
-    }
-
-    maxi = max_element(line.begin(), line.end());
-    return distance(line.begin(), maxi);*/
-    return 0;
-}
-
-void FCmatrixBanded::SetRowIdx(int i, int j) //valor a meter na linha i o valor j //useless
-{
-
-    /* int l = GetRowN();
-    if (i > l || j > l)
-    {
-        cout << "linhas inexistentes" << endl;
-        exit(1);
-    }*/
-    //rowindices[i] = j;
-}
-
-void FCmatrixBanded::IdxPrint()
-{
-    /* for (int i = 0; i < GetRowN(); ++i)
-        cout << "r[" << i<< "]" << rowindices[i];*/
-    //cout << endl;
-}
-
-int FCmatrixBanded::GetRowIdx(int i)
-{
-    //return rowindices[i];
-    return 1;
-}
-
-void FCmatrixBanded::Setvector(vector<Vec> &mat) //useless
-{
-    /*  int m = GetRowN();
-    for (int i = 0; i < m; ++i)
-        M[i] = mat[i];*/
+    return Res;
 }
 
 double FCmatrixBanded::Determinant()
@@ -332,4 +229,14 @@ double FCmatrixBanded::Determinant()
         lam = lam * M[1][i];
 
     return lam;
+}
+
+int FCmatrixBanded::GetRowN()
+{
+    return M[1].size();
+}
+
+int FCmatrixBanded::GetColN()
+{ //redundante mas prontos
+    return M[1].size();
 }

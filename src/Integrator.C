@@ -69,37 +69,37 @@ void Integrator::TrapezoidalAdaptative(double &Integrator, double &Error)
 
 void Integrator::Simpson(int n, double &Integrator, double &Error)
 {
-
+    int m = n;
     double h = (x1 - x0) / (double)n;
     double xi = x0 + h;
     double d = 4.;
 
-    if (n % 2 == 0)
-    {
-        double F = 0.;
-        double errorSum = 0.;
-       /* for (int i = 1; i < n; i = i + 2)
-        {
-            F += Eval(xi - h) + d * Eval(xi) + Eval(xi + h);
-            if (i == 1 || i = n - 1)
-                //curly brackets
-                else //curly brackets
-                    errorSum += Eval(xi - h - h) - 4 * Eval(xi - h) + 6 * Eval(xi) - 4 * Eval(xi + h) + Eval(xi + h + h) xi += h + h;
-        }
-        F *= (h / 3.); //falta erro derivada de ordem 4?
-        F += h / 12 * ((-1.) * Eval(xi - h - h) + 8 * Eval(xi - h) + 5 * Eval(xi));
-        Integrator = F;
-
-    } //ELSE*/
-    }
+    double errorSum = 0.;
+    double d4f = 0.;
+    double h4 = h * h * h * h;
     double F = 0.;
+    vector<double> error;
+
+    if (n % 2 == 1)
+        n = n - 1;
+
     for (int i = 1; i < n; i = i + 2)
     {
         F += Eval(xi - h) + d * Eval(xi) + Eval(xi + h);
-        xi += h + h;
+        errorSum = Eval(xi - h - h) - 4 * Eval(xi - h) + 6 * Eval(xi) - 4 * Eval(xi + h) + Eval(xi + h + h);
+        d4f = errorSum / h4;
+        error.push_back(d4f);
+        F *= (h / 3.);
+        xi = xi + h + h;
     }
+    if (m % 2 == 1)
+        F += h / 12 * ((-1.) * Eval(xi - h - h) + 8 * Eval(xi - h) + 5 * Eval(xi));
+    Integrator = F;
 
-    Integrator = F * (h / 3.); //falta erro derivada de ordem 4?
+    double sumAvg = accumulate(error.begin(), error.end(), 0.0);
+    Error = sumAvg / (double)error.size();
+
+    error.clear();
 }
 
 void Integrator::Romberg(int n, double &Integrator, double &Error)
@@ -111,10 +111,7 @@ void Integrator::Romberg(int n, double &Integrator, double &Error)
     double q = 4.;
 
     for (int i = 0; i < n; i++)
-    {
         Trapezoidal(i + 1, mat[i][0], erro);
-        //cout << "valor mat0i: " << mat[0][i] << " valor i: " << i << endl;
-    }
 
     for (int k = 1; k < n; k++)
     {

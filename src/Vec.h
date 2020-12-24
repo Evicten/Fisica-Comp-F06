@@ -3,44 +3,46 @@
 
 #include <iostream>
 
-
 #include <vector>
 #include "string.h"
 
 using namespace std;
 
-class Vec{
-    
-    public:
-    Vec(int i=0, double x=0);
-    Vec(int, const double*);
-    Vec(const Vec&);
-    
+class Vec
+{
+
+public:
+    //construtores
+    Vec(int i = 0, double x = 0);
+    Vec(int, const double *);
+    Vec(const Vec &);
+
+    //destrutor
     ~Vec();
 
-   
-    double& operator[](int i);
+    //operadores que manipulam o vetor
+    double &operator[](int i);
+    double operator[](int i) const;
+    void operator=(const Vec &);
+    Vec &operator+=(Vec &);
+    Vec operator*(double) const;
 
-    void SetEntries(int, double*);
-    
-    int size();
-    double dot(Vec&);
+    double dot(Vec &);
     void swap(int, int);
     double sumAbs();
 
+    //definir um novo vetor
+    void SetEntries(int, double *);
 
-    void operator=(const Vec&);
-    Vec& operator+=( Vec&);
+    //tamanho do vetor
+    int size() const;
 
-    Vec operator*(double) const;
+    //friend method
+    friend ostream &operator<<(ostream &, const Vec &);
 
-    friend ostream& operator<<(ostream&, const Vec&);
-
-    private:
+private:
     int N;
     double *entries;
-    
 };
-
 
 #endif

@@ -10,33 +10,36 @@ class FCmatrixFull : public FCmatrix{
     FCmatrixFull();
     FCmatrixFull(double**, int, int);
     FCmatrixFull(double*, int, int);
-    FCmatrixFull(vector<Vec>&);
+    FCmatrixFull(const vector<Vec>&);
 
-    
-    FCmatrixFull(FCmatrix&);// constructor
-    FCmatrixFull(FCmatrixFull&);
+    FCmatrixFull(const FCmatrix&);// constructor
+    ~FCmatrixFull(); 
 
     //operators
-    FCmatrixFull operator+(FCmatrix&);
+    const FCmatrixFull& operator=(const FCmatrixFull&);
+    FCmatrixFull operator+(const FCmatrixFull&);
     Vec& operator[](int);
-    FCmatrixFull operator-(FCmatrix&);
+    Vec operator[](int) const;
+    FCmatrixFull operator-(const FCmatrixFull&);
     FCmatrixFull operator*(double lambda);
-    FCmatrixFull operator*(FCmatrix&); //M*mat&
-    Vec operator*(Vec&);
+    FCmatrixFull operator*(const FCmatrixFull&); //M*mat&
+    Vec operator*(const Vec&);
+    
+    //operadores que manipulam a matriz
+    Vec GetRow(int);
+    int GetRowMax(int i = 0) const;
+    int GetColMax(int j = 0) const;
+    void Setvector(const vector<Vec>&);
 
     double Determinant();
-    
-    Vec GetRow(int);
-    void Print();
-    int GetRowMax(int i = 0);
-    int GetColMax(int j = 0);
 
-
+    //metodos para uteis em troca de linhas
     void SetRowIdx(int, int);
-    void IdxPrint();
-    int GetRowIdx(int);
+    void IdxPrint() const;
+    int GetRowIdx(int) const;
 
-    void Setvector(vector<Vec>&);
+    //friend method
+    friend ostream& operator<<(ostream&, const FCmatrixFull&);
     
 
     private:

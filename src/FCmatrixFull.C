@@ -5,6 +5,7 @@
 
 using namespace std;
 
+//construtores -------------
 FCmatrixFull::FCmatrixFull() : FCmatrix::FCmatrix()
 {
     int n = FCmatrixFull::GetColN();
@@ -29,7 +30,7 @@ FCmatrixFull::FCmatrixFull(double *fM, int fm, int fn) : FCmatrix(fM, fm, fn)
         rowindices[i] = i;
 }
 
-FCmatrixFull::FCmatrixFull(vector<Vec> &v) : FCmatrix(v)
+FCmatrixFull::FCmatrixFull(const vector<Vec> &v) : FCmatrix(v)
 {
     int n = GetColN();
     rowindices = new int[n];
@@ -37,21 +38,30 @@ FCmatrixFull::FCmatrixFull(vector<Vec> &v) : FCmatrix(v)
         rowindices[i] = i;
 }
 
-FCmatrixFull::FCmatrixFull(FCmatrixFull &mat) : FCmatrix(mat)
-{ //copy constructor
-    classname = mat.classname;
-    int n = mat.GetColN();
-    rowindices = new int[n];
-    for (int i = 0; i < n; ++i)
-        rowindices[i] = i;
-}
-
-FCmatrixFull::FCmatrixFull(FCmatrix &mat) : FCmatrix(mat)
+FCmatrixFull::FCmatrixFull(const FCmatrix &mat) : FCmatrix(mat)
 {
     int n = mat.GetColN();
     rowindices = new int[n];
     for (int i = 0; i < n; ++i)
         rowindices[i] = i;
+}
+//------------------------
+
+FCmatrixFull::~FCmatrixFull()
+{
+    delete[] rowindices;
+    cout << __PRETTY_FUNCTION__ << endl;
+}
+
+//metodos manipular matrix   vector<Vec> M -----------
+const FCmatrixFull &FCmatrixFull::operator=(const FCmatrixFull &A)
+{
+    if (this != &A)
+    {
+        int m = A.GetRowN();
+        M = A.M;
+        copy(A.rowindices, A.rowindices + m, rowindices);
+    }
 }
 
 Vec &FCmatrixFull::operator[](int i)
@@ -59,7 +69,12 @@ Vec &FCmatrixFull::operator[](int i)
     return M[i];
 }
 
-FCmatrixFull FCmatrixFull::operator+(FCmatrix &mat)
+Vec FCmatrixFull::operator[](int i) const
+{
+    return M[i];
+}
+
+FCmatrixFull FCmatrixFull::operator+(const FCmatrixFull &mat)
 {
 
     int m1, m2, n1, n2;
@@ -74,10 +89,14 @@ FCmatrixFull FCmatrixFull::operator+(FCmatrix &mat)
         exit(1);
     }
     vector<Vec> res;
+    Vec aux(n1);
+
     for (int i = 0; i < m1; ++i)
     {
         for (int j = 0; j < n1; ++j)
-            res[i][j] = mat[i][j] + M[i][j];
+            aux[j] = mat[i][j] + M[i][j];
+
+        res.push_back(aux);
     }
 
     FCmatrixFull Res(res);
@@ -85,7 +104,7 @@ FCmatrixFull FCmatrixFull::operator+(FCmatrix &mat)
     return Res;
 }
 
-FCmatrixFull FCmatrixFull::operator-(FCmatrix &mat)
+FCmatrixFull FCmatrixFull::operator-(const FCmatrixFull &mat)
 {
 
     int m1, m2, n1, n2;
@@ -100,10 +119,13 @@ FCmatrixFull FCmatrixFull::operator-(FCmatrix &mat)
         exit(1);
     }
     vector<Vec> res;
+    Vec aux(n1);
     for (int i = 0; i < m1; ++i)
     {
         for (int j = 0; j < n1; ++j)
-            res[i][j] = M[i][j] - mat[i][j];
+            aux[j] = M[i][j] - mat[i][j];
+
+        res.push_back(aux);
     }
 
     FCmatrixFull Res(res);
@@ -119,11 +141,14 @@ FCmatrixFull FCmatrixFull::operator*(double lambda)
     n1 = GetColN();
 
     vector<Vec> res;
+    Vec aux(n1);
 
     for (int i = 0; i < m1; ++i)
     {
         for (int j = 0; j < n1; ++j)
-            res[i][j] = lambda * M[i][j];
+            aux[j] = lambda * M[i][j];
+
+        res.push_back(aux);
     }
 
     FCmatrixFull Res(res);
@@ -131,7 +156,7 @@ FCmatrixFull FCmatrixFull::operator*(double lambda)
     return Res;
 }
 
-FCmatrixFull FCmatrixFull::operator*(FCmatrix &mat)
+FCmatrixFull FCmatrixFull::operator*(const FCmatrixFull &mat)
 { //M*mat&
 
     int m1, m2, n1, n2;
@@ -149,6 +174,7 @@ FCmatrixFull FCmatrixFull::operator*(FCmatrix &mat)
     }
 
     vector<Vec> rest;
+    Vec aux(n2);
 
     for (int i = 0; i < m1; ++i)
     {
@@ -160,8 +186,9 @@ FCmatrixFull FCmatrixFull::operator*(FCmatrix &mat)
             for (int k = 0; k < m2; ++k)
                 sum = sum + mat[i][k] * M[k][j];
 
-            rest[i][j] = sum;
+            aux[j] = sum;
         }
+        rest.push_back(aux);
     }
 
     FCmatrixFull Res(rest);
@@ -169,7 +196,7 @@ FCmatrixFull FCmatrixFull::operator*(FCmatrix &mat)
     return Res;
 }
 
-Vec FCmatrixFull::operator*(Vec &v)
+Vec FCmatrixFull::operator*(const Vec &v)
 {
     int l = v.size();
     int m, n;
@@ -182,7 +209,7 @@ Vec FCmatrixFull::operator*(Vec &v)
         exit(1);
     }
 
-    Vec Res;
+    Vec Res(m);
     double sum = 0.;
 
     for (int i = 0; i < m; ++i)
@@ -194,11 +221,33 @@ Vec FCmatrixFull::operator*(Vec &v)
         sum = 0.;
     }
 
-    Vec R(Res);
-    return R;
+    return Res;
 }
 
+double FCmatrixFull::Determinant()
+{
+    int m = GetRowN();
+    int n = GetColN();
+    Vec A(m);
+    cout << "Determinante" << endl;
+    if (m != n)
+    {
+        cout << "matrix não quadrada" << endl;
+        exit(1);
+    }
+    FCmatrixAlgorithms::GaussElimination(*this, A, 0);//tem de ser pivotagem para não alterar eventualmente o determinante
+    int iR;
+    double lam = 1.;
+    for (int i = 0; i < m; ++i)
+    {
+        iR = GetRowIdx(i);
+        lam = lam * M[iR][i];
+    }
+    return lam;
+}
+//--------------------------------
 
+//extrair data da matrix M----------------------
 Vec FCmatrixFull::GetRow(int j)
 {
     int n = GetColN();
@@ -212,22 +261,7 @@ Vec FCmatrixFull::GetRow(int j)
     delete[] v;
 }
 
-void FCmatrixFull::Print()
-{
-    int iR;
-    cout << "matriz: " << classname << endl;
-    for (int i = 0; i < M.size(); ++i)
-    {
-        for (int j = 0; j < M[i].size(); ++j)
-        {
-            iR = GetRowIdx(i);
-            cout << M[iR][j] << " ";
-        }
-        cout << endl;
-    }
-}
-
-int FCmatrixFull::GetRowMax(int j)
+int FCmatrixFull::GetRowMax(int j) const
 {
     int n = GetColN();
     double *v = new double[n];
@@ -244,7 +278,7 @@ int FCmatrixFull::GetRowMax(int j)
     return distance(h.begin(), maxi);
 }
 
-int FCmatrixFull::GetColMax(int j)
+int FCmatrixFull::GetColMax(int j) const
 { //j coluna a começar em 0
     int n = GetColN();
     int m = GetRowN();
@@ -265,7 +299,9 @@ int FCmatrixFull::GetColMax(int j)
     maxi = max_element(line.begin(), line.end());
     return distance(line.begin(), maxi);
 }
+//-----------------------------
 
+//metodos que manipulam o rowidice util para troca de linhas --------------------------
 void FCmatrixFull::SetRowIdx(int i, int j) //valor a meter na linha i o valor j
 {
 
@@ -278,41 +314,45 @@ void FCmatrixFull::SetRowIdx(int i, int j) //valor a meter na linha i o valor j
     rowindices[i] = j;
 }
 
-void FCmatrixFull::IdxPrint(){
+void FCmatrixFull::IdxPrint() const //print do vetor de indices
+{
     for (int i = 0; i < GetRowN(); ++i)
-        cout << "r[" << i<< "]" << rowindices[i];
+        cout << "r[" << i << "]" << rowindices[i];
     cout << endl;
 }
 
-int FCmatrixFull::GetRowIdx(int i)
+int FCmatrixFull::GetRowIdx(int i) const //obter a linha da matriz que ocupa atualmente a posição i e que no inicio ocupava a linha (conteudo do vetor em i)
 {
     return rowindices[i];
 }
 
-void FCmatrixFull::Setvector(vector<Vec> &mat)
+//------------------------------------
+
+//Definir uma nova matriz M e reset dos indices tbm
+void FCmatrixFull::Setvector(const vector<Vec> &mat)
 {
     int m = GetRowN();
-    for (int i = 0; i < m; ++i)
+    for (int i = 0; i < m; i++)
         M[i] = mat[i];
+
+    for (int i = 0; i < m; i++)
+        rowindices[i] = i;
 }
 
-double FCmatrixFull::Determinant()
+//friend method------------
+ostream &operator<<(ostream &s, const FCmatrixFull &M)
 {
-    int m = GetRowN();
-    int n = GetColN();
-    Vec A(m);
-    cout << "Determinante" << endl;
-    if (m != n)
-    {
-        cout << "matrix não quadrada" << endl;
-        exit(1);
-    }
-    FCmatrixAlgorithms::GaussElimination(*this, A, 1);
     int iR;
-    double lam = 1.;
-    for (int i = 0; i < m; ++i){
-        iR = GetRowIdx(i);
-        lam = lam * M[iR][i];
+    cout << "matriz: " << M.classname << endl;
+    for (int i = 0; i < M[0].size(); i++)
+    {
+        for (int j = 0; j < M[i].size(); j++)
+        {
+            iR = M.GetRowIdx(i);
+            cout << M[iR][j] << " ";
+        }
+        cout << endl;
     }
-    return lam;
+    cout << __PRETTY_FUNCTION__ << endl;
 }
+//------------------

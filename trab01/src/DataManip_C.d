@@ -1,0 +1,52 @@
+
+# DO NOT DELETE
+
+../src/DataManip_C.so: /home/vicente/FC/2020/F06/trab01/src/DataManip.h
+../src/DataManip_C.so: /home/vicente/FC/2020/F06/trab01/src/DataReader.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TGraph.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TNamed.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TObject.h
+../src/DataManip_C.so: /home/vicente/root_install/include/RConfigure.h
+../src/DataManip_C.so: /home/vicente/root_install/include/Rtypes.h
+../src/DataManip_C.so: /home/vicente/root_install/include/RtypesCore.h
+../src/DataManip_C.so: /home/vicente/root_install/include/ROOT/RConfig.hxx
+../src/DataManip_C.so: /home/vicente/root_install/include/RVersion.h
+../src/DataManip_C.so: /home/vicente/root_install/include/DllImport.h
+../src/DataManip_C.so: /home/vicente/root_install/include/snprintf.h
+../src/DataManip_C.so: /home/vicente/root_install/include/strlcpy.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TGenericClassInfo.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TSchemaHelper.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TIsAProxy.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TVirtualIsAProxy.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TStorage.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TVersionCheck.h
+../src/DataManip_C.so: /home/vicente/root_install/include/RVersion.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TString.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TMathBase.h
+../src/DataManip_C.so: /home/vicente/root_install/include/ROOT/RStringView.hxx
+../src/DataManip_C.so: /home/vicente/root_install/include/ROOT/RWrap_libcpp_string_view.h
+../src/DataManip_C.so: /home/vicente/root_install/include/ROOT/libcpp_string_view.h
+../src/DataManip_C.so: /home/vicente/root_install/include/ROOT/TypeTraits.hxx
+../src/DataManip_C.so: /home/vicente/root_install/include/TAttLine.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TAttFill.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TAttMarker.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TVectorFfwd.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TVectorDfwd.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TFitResultPtr.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TH2D.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TH2.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TH1.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TAxis.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TAttAxis.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TArrayD.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TArray.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TArrayC.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TArrayS.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TArrayI.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TArrayF.h
+../src/DataManip_C.so: /home/vicente/root_install/include/Foption.h
+../src/DataManip_C.so: /home/vicente/root_install/include/Fit/FitExecutionPolicy.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TMatrixFBasefwd.h
+../src/DataManip_C.so: /home/vicente/root_install/include/TMatrixDBasefwd.h
+../src/DataManip_C.so: /home/vicente/root_install/include/RVersion.h /home/vicente/root_install/include/RConfig.h /home/vicente/root_install/include/TClass.h /home/vicente/root_install/include/TDictAttributeMap.h /home/vicente/root_install/include/TInterpreter.h /home/vicente/root_install/include/TROOT.h /home/vicente/root_install/include/TBuffer.h /home/vicente/root_install/include/TMemberInspector.h /home/vicente/root_install/include/TError.h /home/vicente/root_install/include/RtypesImp.h /home/vicente/root_install/include/TIsAProxy.h /home/vicente/root_install/include/TFileMergeInfo.h /home/vicente/root_install/include/TCollectionProxyInfo.h
+DataManip_C__ROOTBUILDVERSION= 6.22/02

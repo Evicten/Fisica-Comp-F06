@@ -1,0 +1,11 @@
+
+--This line, and those below, will be ignored--
+
+A    trab01/src/DataManip.C
+A    trab01/src/DataManip.h
+A    trab01/src/DataReader.C
+A    trab01/src/DataReader.h
+A    trab01/src/SunspotNumberDATA2020.txt
+A    trab01/src/metodo1leitura.C
+AM   trab01/src/tests
+A    trab01/src/tests.C
